@@ -18,7 +18,6 @@ public class FractalViewer {
         
         //ViewWindow window = new ViewWindow(1600,800,0,0,-0.8,0.156);
         ViewWindow window = new ViewWindow(1600,800,-1,0);
-        window.zoomFactor=1.5;
         window.draw();
     }
     
