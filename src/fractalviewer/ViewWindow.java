@@ -33,6 +33,7 @@ public class ViewWindow extends JFrame implements KeyListener{
     private double frameL;
     private double frameH;
     private int type;
+    private int drawStyle;
     public double zoomFactor;
     private double zoomLevel;
 
@@ -45,6 +46,7 @@ public class ViewWindow extends JFrame implements KeyListener{
         
         zoomLevel=1;
         type=1;
+        drawStyle=0;
         this.x0=x0;
         this.y0=y0;
         this.Pr=Pr;
@@ -136,9 +138,17 @@ public class ViewWindow extends JFrame implements KeyListener{
     public int getCouleurRGB(int couleur) {
         couleur = (int)Math.round(couleur*(double)255/nIter);
         double zoomedCouleur = couleur*Math.abs(Math.round((1+Math.log10(zoomLevel))));
-        int rouge = type==0?scaleColor(zoomedCouleur,0.05,0.6):scaleColor(zoomedCouleur,0.04,0.7);
-        int vert = type==0?scaleColor(zoomedCouleur,1.2*0.05,0.6):scaleColor(zoomedCouleur,1.2*0.04,0.7);
-        int bleu = type==0?scaleColor(zoomedCouleur,1.4*0.05,0.6):scaleColor(zoomedCouleur,1.4*0.04,0.7);
+        int rouge,vert,bleu;
+        if(drawStyle==0){
+            rouge = type==0?scaleColor(zoomedCouleur,0.05,0.6):scaleColor(zoomedCouleur,0.04,0.7);
+            vert = type==0?scaleColor(zoomedCouleur,1.2*0.05,0.6):scaleColor(zoomedCouleur,1.2*0.04,0.7);
+            bleu = type==0?scaleColor(zoomedCouleur,1.4*0.05,0.6):scaleColor(zoomedCouleur,1.4*0.04,0.7);
+        }
+        else{
+            rouge = (int)Math.round(8*zoomedCouleur)%255;
+            vert = 90+(int)Math.round(9*zoomedCouleur)%255/2;
+            bleu = 90+(int)Math.round(10*zoomedCouleur)%255/2;    
+        }
         return (new Color(rouge,vert,bleu)).getRGB();  
     };
     
@@ -265,6 +275,12 @@ public class ViewWindow extends JFrame implements KeyListener{
 
     @Override
     public void keyPressed(KeyEvent ke) {
+        //System.out.println(ke.getKeyCode());
+        if(ke.getKeyCode()==68){
+            drawStyle = 1 - drawStyle;
+            draw();
+        }
+        
         if(type==1){
             switch (ke.getKeyCode()){
                 case 38:
