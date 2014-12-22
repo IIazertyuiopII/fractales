@@ -16,8 +16,8 @@ public class FractalViewer {
      */
     public static void main(String[] args) {
         
-        //ViewWindow window = new ViewWindow(1600,800,0,0,-0.8,0.156);
-        ViewWindow window = new ViewWindow(1600,800,-1,0);
+        ViewWindow window = new ViewWindow(1600,800,0,0,-0.8,0.156);
+        //ViewWindow window = new ViewWindow(1600,800,-1,0);
         window.draw();
     }
     

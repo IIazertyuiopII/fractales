@@ -24,17 +24,18 @@ public class FractalCalculator implements Runnable{
     @Override
     public void run() {
         
-        if(p.type==0){
+        if(p.type==1){ 
             double x;
             double y;
             double tmp;
             int couleur;
-
+            
             for(int i=startX; i<endX; i++){
                 for(int j=startY; j<endY;j++){
                     x = p.x0 - 0.5*p.frameL + p.frameL*((double)i)/canvas.getWidth();
                     y = p.y0 - 0.5*p.frameH + p.frameH*((double)j)/canvas.getHeight();
                     couleur=0;
+                                        
                     do{
                         tmp=p.Pr+x*x-y*y;
                         y=p.Pi+2*x*y;
@@ -46,7 +47,7 @@ public class FractalCalculator implements Runnable{
             }
             throw new RuntimeException();
         }
-        if(p.type==1){
+        if(p.type==0){
             double mandelPr;
             double mandelPi;
             int couleur;

@@ -9,7 +9,6 @@ package fractalviewer;
  *
  * @author IAZERTYUIOPI
  */
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
@@ -17,20 +16,20 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 
 public class ViewWindow extends JFrame implements KeyListener{
     
+    final static int NCORES = 4;
     private JPanel panel;
-    private BufferedImage canvas;
+    private ArrayList<Thread> threads;
     private FractalParametersObject p;
     private Thread.UncaughtExceptionHandler eHandler;
-    private ExecutorService threadPool;
-            
+    private BufferedImage canvas;        
+    
     public ViewWindow(int width, int height, double x0, double y0) {
         this(width,height,x0,y0,0,0);
         p.type=0;
@@ -38,12 +37,11 @@ public class ViewWindow extends JFrame implements KeyListener{
     
     public ViewWindow(int width, int height, double x0, double y0, double Pr, double Pi) {
         
-        threadPool = Executors.newFixedThreadPool(4);
         eHandler = new Thread.UncaughtExceptionHandler() {
             public void uncaughtException(Thread th, Throwable ex) {
             th.interrupt();
-                System.out.println("finini");
-            repaint();
+            threads.remove(th);
+            if(threads.isEmpty())repaint();
         }
         };
         p = new FractalParametersObject();
@@ -59,8 +57,10 @@ public class ViewWindow extends JFrame implements KeyListener{
         p.frameH=2;
         p.frameL=2*width/height;
         
-        //fill the Image
+        //fill the images vector
+        
         canvas = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        threads = new ArrayList<>();
         
         //define paint method of JPanel
         panel = new JPanel(){public void paintComponent(Graphics g) {
@@ -103,16 +103,27 @@ public class ViewWindow extends JFrame implements KeyListener{
     
     public void draw() {
 
-        for(int i=0; i < 4 ; i++){
-            
-            int s_x=i*canvas.getWidth()/4;
-            int e_x=(i+1)*canvas.getWidth()/4;
-            int s_y=i*canvas.getHeight()/4;
-            int e_y=(i+1)*canvas.getHeight()/4;
-            
-            Thread currentThread = new Thread(new FractalCalculator(s_x,e_x,s_y,e_y,canvas,p));
-            threadPool.submit(currentThread);
+        if(!threads.isEmpty()){
+            System.out.println("Calculation in progress... please wait");
+            return;
+        }
+        
+        for(int i=0; i < 2 ; i++){
+            for(int j=0; j < 2 ; j++){
+        
+                int s_x=i*canvas.getWidth()/2;
+                int s_y=j*canvas.getHeight()/2;
+                int e_x=(i+1)*canvas.getWidth()/2;
+                int e_y=(j+1)*canvas.getHeight()/2;
+                
+                Thread currentThread = new Thread(new FractalCalculator(s_x,e_x,s_y,e_y,canvas,p));
+                currentThread.setUncaughtExceptionHandler(eHandler);
+                threads.add(currentThread);
+            }
         } 
+        for(int i=0;i<NCORES;i++){
+                threads.get(i).start();
+            }
         
         if(p.type==1){
             setTitle("Ensemble de Julia : Pr = "+rdn(p.Pr,5)+",Pi = "+rdn(p.Pi,5)+",zoom = "+rdn(p.zoomLevel,1)+",centré sur ("+rdn(p.x0,5)+","+rdn(p.y0,5)+")");
