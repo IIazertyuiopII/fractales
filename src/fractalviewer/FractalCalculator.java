@@ -55,7 +55,7 @@ public class FractalCalculator implements Runnable{
             double y;
             double tmp;
 
-            for(int i=startX; i<endY; i++){
+            for(int i=startX; i<endX; i++){
                 for(int j=startY; j<endY; j++){
 
                     mandelPr = p.x0 - 0.5*p.frameL + p.frameL*((double)i)/canvas.getWidth();
