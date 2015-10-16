@@ -3,17 +3,17 @@ Projet simple de visualisation d'ensembles fractals en Java, adapté au multi-co
 
 <h2> Raccourcis clavier : </h2>
 
-*Général
+* Général
 
 clic gauche : zoomer
 clic droit : dézoomer
 d : changer le style de rendu
 
-*Mandelbrot 
+* Mandelbrot 
 
 flèches (haut bas) : changer le nombre d'itérations
 
-*Julia
+* Julia
 
 flèches (haut bas gauche droite) : changer la valeur de la constante complexe
 
