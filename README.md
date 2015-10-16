@@ -6,8 +6,11 @@ Projet simple de visualisation d'ensembles fractals en Java, adapté au multi-co
 * Général
 
 clic gauche : zoomer
+
 clic droit : dézoomer
+
 d : changer le style de rendu
+
 
 * Mandelbrot 
 
